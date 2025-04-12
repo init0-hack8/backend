@@ -12,7 +12,7 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 
 async function fetchPosts() {
-  const snapshot = await db.collection("posts").get();
+  const snapshot = await db.collection("post").get();
   const posts = snapshot.docs.map(doc => ({
     id: doc.id,
     ...doc.data()
