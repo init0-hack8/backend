@@ -20,5 +20,39 @@ async function fetchPosts() {
   return posts;
 }
 
+async function checkPostIdExist(postId){
+    const analysisRef = db.collection('result').doc(postId);
+    const doc = await analysisRef.get();
+    if (doc.exists) {
+        console.log('Analysis already exists for post:', postId);
+        return true;
+    }
+    return false;
+}
 
-export { db,fetchPosts };
+
+async function saveAnalysisResult(postId, sentimentData) {
+    try {
+      const analysisRef = db.collection('result').doc(postId);
+      const doc = await analysisRef.get();
+  
+      if (doc.exists) {
+        console.log('Analysis already exists for post:', postId);
+        return false;
+      }
+  
+      // If sentimentData is already an object, don't parse it again!
+      await analysisRef.set({
+        ...sentimentData, // This is the fullResult object
+      });
+  
+      console.log('Analysis saved successfully for post:', postId);
+      return true;
+    } catch (error) {
+      console.error('Error saving analysis:', error);
+      throw error;
+    }
+  }
+  
+
+export { db, fetchPosts, saveAnalysisResult, checkPostIdExist };
